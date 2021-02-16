@@ -1,4 +1,6 @@
-![image code score](https://www.code-inspector.com/project/16385/score/svg) ![image code grade](https://www.code-inspector.com/project/16385/status/svg)
+![image code score](https://www.code-inspector.com/project/19173/score/svg) ![image code grade](https://www.code-inspector.com/project/19173/status/svg)
+
+[Fork](https://github.com/GeekLabsUK/SimpleAuth)
 
 # SimpleAuth
 A simple Auth library for Codeigniter 4

@@ -8,24 +8,24 @@
  * This content is released under the MIT License (MIT)
  *
  * @package    SimpleAuth
- * @author     GeekLabs - Lee Skelding 
+ * @author     GeekLabs - Lee Skelding
  * @license    https://opensource.org/licenses/MIT	MIT License
  * @link       https://github.com/GeekLabsUK/SimpleAuth
  * @since      Version 1.0
- * 
+ *
  */
 
 namespace App\Controllers;
 
 use App\Models\AuthModel;
-use App\libraries\AuthLibrary;
+use App\Libraries\AuthLibrary;
 
 class Auth extends BaseController
 {
 	public function __construct()
 	{
 		$this->AuthModel =	new AuthModel();
-		$this->Session = session();		
+		$this->Session = session();
 		$this->Auth = new AuthLibrary;
 		$this->config = config('Auth');
 	}
@@ -51,7 +51,7 @@ class Auth extends BaseController
 	*/
 	public function login()
 	{
-		
+
 
         // CHECK IF COOKIE IS SET
 		$this->Auth->checkCookie();
@@ -78,18 +78,18 @@ class Auth extends BaseController
 
 				$this->Auth->loginlogFail($this->request->getVar('email'));
 
-			} else {				
+			} else {
 
 				// GET EMAIL & REMEMBER ME FROM POST
 				$email = $this->request->getVar('email');
-				$rememberMe = $this->request->getVar('rememberme');			
+				$rememberMe = $this->request->getVar('rememberme');
 
 				// PASS TO LIBRARY
 				$this->Auth->Loginuser($email, $rememberMe);
 
-				// REDIRECT 
+				// REDIRECT
 				return redirect()->to($this->Auth->autoRedirect());
-				
+
 			}
 		}
 
@@ -127,7 +127,7 @@ class Auth extends BaseController
 				'password_confirm' => 'matches[password]',
 			];
 
-			//VALIDATE RULES
+			// VALIDATE RULES
 			if (!$this->validate($rules)) {
 				$data['validation'] = $this->validator;
 			} else {
@@ -137,19 +137,19 @@ class Auth extends BaseController
 					'firstname' => $this->request->getVar('firstname'),
 					'lastname' => $this->request->getVar('lastname'),
 					'email' => $this->request->getVar('email'),
-					'password' => $this->request->getVar('password'),					
-				];				
+					'password' => $this->request->getVar('password'),
+				];
 
 				// PASS TO LIBRARY
-				$result = $this->Auth->RegisterUser($userData);	
-				
+				$result = $this->Auth->RegisterUser($userData);
+
 				// CHECK RESULT
 				if($result){
 
 					return redirect()->to('/login');
 
 				}
-				
+
 			}
 		}
 
@@ -163,16 +163,16 @@ class Auth extends BaseController
 	| RESEND ACTIVATION EMAIL
 	|--------------------------------------------------------------------------
 	|
-	| If user needs to resend activation email  
+	| If user needs to resend activation email
 	|
 	*/
 	public function resendactivation($id)
 	{
 
 		// PASS TO LIBRARY
-		$this->Auth->ResendActivation($id);		
+		$this->Auth->ResendActivation($id);
 
-		return redirect()->to('/login');		
+		return redirect()->to('/login');
 
 	}
 
@@ -182,14 +182,14 @@ class Auth extends BaseController
 	| ACTIVATE USER
 	|--------------------------------------------------------------------------
 	|
-	| Activate user account from email link 
+	| Activate user account from email link
 	|
 	*/
 	public function activateUser($id, $token)
 	{
-	
+
 		// PASS TO LIBRARY
-		$this->Auth->activateuser($id, $token);		
+		$this->Auth->activateuser($id, $token);
 
 		return redirect()->to('/');
 	}
@@ -248,7 +248,7 @@ class Auth extends BaseController
 
 				return redirect()->to($this->Auth->autoRedirect() . '/profile');
 			}
-		}		
+		}
 
 		echo view('templates/header');
 		echo view('profile');
@@ -291,11 +291,11 @@ class Auth extends BaseController
 			}
 
 			// VALIDATED
-			else {			
+			else {
 
 				// PASS TO LIBRARY
 				$this->Auth->ForgotPassword($this->request->getVar('email'));
-				
+
 			}
 		}
 
@@ -317,11 +317,11 @@ class Auth extends BaseController
 	{
 		// PASS TO LIBRARY
 		$id = $this->Auth->resetPassword($id, $token);
-		
+
 		// REDIRECT PASSING USER ID TO UPDATE PASSWORD FORM
 		$this->updatepassword($id);
-				
-		
+
+
 	}
 
 	/*
@@ -330,7 +330,7 @@ class Auth extends BaseController
 	|--------------------------------------------------------------------------
 	|
 	| Get post data from resetpassword.php view
-	| Save new password to DB 
+	| Save new password to DB
 	|
 	*/
 	public function updatepassword($id)
@@ -348,17 +348,17 @@ class Auth extends BaseController
 			if (!$this->validate($rules)) {
 				$data['validation'] = $this->validator;
 			} else {
-				
+
 				// RULES PASSED
 				$user = [
 					'id' => $id,
 					'password' => $this->request->getVar('password'),
-					'reset_expire' => NULL, // RESET EXPIRY 
-					'reset_token' => NULL, // CLEAR OLD TOKEN 
+					'reset_expire' => NULL, // RESET EXPIRY
+					'reset_token' => NULL, // CLEAR OLD TOKEN
 				];
 
 				// PASS TO LIBRARY
-				$this->Auth->updatepassword($user);			
+				$this->Auth->updatepassword($user);
 
 				return redirect()->to('/login');
 			}
@@ -368,7 +368,7 @@ class Auth extends BaseController
 		$data = [
 			'id' => $id,
 		];
-		
+
 		echo view('templates/header');
 		echo view('resetpassword', $data);
 		echo view('templates/footer');
@@ -400,12 +400,12 @@ class Auth extends BaseController
 
 					// GET EMAIL & REMEMBER ME FROM POST
 					$email = $this->request->getVar('email');
-					$rememberMe = $this->request->getVar('rememberme');	
+					$rememberMe = $this->request->getVar('rememberme');
 
                     // LOG USER IN USING EMAIL
                     $this->Auth->Loginuser($email, $rememberMe);
 
-					// REDIRECT 
+					// REDIRECT
 					return redirect()->to($this->Auth->autoRedirect());
                 }
             }
@@ -436,5 +436,5 @@ class Auth extends BaseController
 		return redirect()->to('/');
 	}
 
-	
+
 }
